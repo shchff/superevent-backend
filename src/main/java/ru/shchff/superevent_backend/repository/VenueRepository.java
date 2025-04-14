@@ -11,4 +11,5 @@ public interface VenueRepository extends JpaRepository<Venue, Long>
     List<Venue> findByStatus(VenueStatus status);
     List<Venue> findByCategory_Id(Long categoryId);
     List<Venue> findByUser_Id(Long userId);
+    List<Venue> findByOwnerId(Long userId);
 }

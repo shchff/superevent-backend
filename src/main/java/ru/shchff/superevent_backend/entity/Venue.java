@@ -18,30 +18,46 @@ import java.util.List;
 @Builder
 public class Venue
 {
-    @Id
-    @GeneratedValue
+    @Id @GeneratedValue
     private Long id;
 
-    private String email;
-    private String password;
-    private String phone;
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @Column(name = "registration_doc_url")
+    private String registrationDocUrl;
+
+    private String name;
+    private String description;
+    private String address;
+    private String contacts;
+
+    @Column(name = "working_hours")
+    private String workingHours;
+
+    private BigDecimal price;
+    private int capacity;
 
     @ManyToOne
-    @JoinColumn(name = "role_id")
-    private Role role;
+    @JoinColumn(name = "category_id")
+    private Category category;
 
     @Enumerated(EnumType.STRING)
-    private UserStatus status;
+    private VenueStatus status;
 
-    @Column(name = "registered_at")
-    private LocalDateTime registeredAt;
+    @Column(name = "created_at")
+    private LocalDateTime createdAt;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Review> reviews;
+    @OneToMany(mappedBy = "venue", cascade = CascadeType.ALL)
+    private List<VenuePhoto> photos;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Favorite> favorites;
+    @ManyToMany
+    @JoinTable(name = "venue_tags",
+            joinColumns = @JoinColumn(name = "venue_id"),
+            inverseJoinColumns = @JoinColumn(name = "tag_id"))
+    private List<Tag> tags;
 
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
-    private List<Venue> ownedVenues;
+    @OneToOne(mappedBy = "venue", cascade = CascadeType.ALL)
+    private ModerationRequest moderationRequest;
 }
