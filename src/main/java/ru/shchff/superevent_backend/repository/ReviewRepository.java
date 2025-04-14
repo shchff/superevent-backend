@@ -5,8 +5,7 @@ import ru.shchff.superevent_backend.entity.Review;
 
 import java.util.List;
 
-public interface ReviewRepository extends JpaRepository<Review, Long>
-{
-    List<Review> findByVenue_Id(Long venueId);
-    List<Review> findByUser_Id(Long userId);
+public interface ReviewRepository extends JpaRepository<Review, Long> {
+    List<Review> findByVenueId(Long venueId);  // Получение отзывов для площадки
+    List<Review> findByUserId(Long userId);    // Получение всех отзывов пользователя
 }
