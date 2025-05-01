@@ -32,11 +32,17 @@ public class User
     private Role role;
 
     // Для представителей площадки
+    @Column(name = "phone_number")
     private String phoneNumber;
 
     // Для представителей площадки (PDF/фото)
+    @Column(name = "registration_certificate_path")
     private String registrationCertificatePath;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
+    private UserStatus status;
+
+    @Column(name= "created_ad", nullable = false)
     private LocalDateTime createdAt;
 }
