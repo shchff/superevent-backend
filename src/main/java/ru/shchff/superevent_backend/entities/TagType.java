@@ -1,4 +1,4 @@
-package ru.shchff.superevent_backend.entity;
+package ru.shchff.superevent_backend.entities;
 
 public enum TagType
 {

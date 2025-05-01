@@ -1,4 +1,4 @@
-package ru.shchff.superevent_backend.entity;
+package ru.shchff.superevent_backend.entities;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -9,14 +9,14 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "favorites")
+@Table(name = "reviews")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Favorite {
+public class Review {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -25,6 +25,7 @@ public class Favorite {
     @ManyToOne
     private Venue venue;
 
-    @Column(name = "added_at")
-    private LocalDateTime addedAt;
+    private int rating;
+    private String comment;
+    private LocalDateTime createdAt;
 }

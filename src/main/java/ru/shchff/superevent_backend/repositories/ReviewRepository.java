@@ -1,7 +1,7 @@
-package ru.shchff.superevent_backend.repository;
+package ru.shchff.superevent_backend.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.shchff.superevent_backend.entity.Review;
+import ru.shchff.superevent_backend.entities.Review;
 
 import java.util.List;
 

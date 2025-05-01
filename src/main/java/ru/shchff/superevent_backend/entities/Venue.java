@@ -1,10 +1,7 @@
-package ru.shchff.superevent_backend.entity;
+package ru.shchff.superevent_backend.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,13 +9,13 @@ import java.util.List;
 
 @Entity
 @Table(name = "venues")
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
 public class Venue
 {
-    @Id @GeneratedValue
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
@@ -43,21 +40,12 @@ public class Venue
     @JoinColumn(name = "category_id")
     private Category category;
 
-    @Enumerated(EnumType.STRING)
-    private VenueStatus status;
-
     @Column(name = "created_at")
     private LocalDateTime createdAt;
-
-    @OneToMany(mappedBy = "venue", cascade = CascadeType.ALL)
-    private List<VenuePhoto> photos;
 
     @ManyToMany
     @JoinTable(name = "venue_tags",
             joinColumns = @JoinColumn(name = "venue_id"),
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private List<Tag> tags;
-
-    @OneToOne(mappedBy = "venue", cascade = CascadeType.ALL)
-    private ModerationRequest moderationRequest;
 }
