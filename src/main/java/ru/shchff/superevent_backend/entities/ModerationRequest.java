@@ -1,38 +1,33 @@
 package ru.shchff.superevent_backend.entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "reviews")
-@Data
+@Table(name = "moderation_requests")
+@Getter
+@Setter
 @NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class Review {
+public class ModerationRequest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "user_id")
-    private User user;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "venue_id")
     private Venue venue;
 
     @Column(nullable = false)
-    private int rating;
+    private LocalDateTime submittedAt;
 
     @Lob
-    private String comment;
+    private String moderatorComment;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    private ModerationStatus status;
 }

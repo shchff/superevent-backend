@@ -9,7 +9,10 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "favorites")
+@Table(
+        name = "favorites",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "venue_id"})
+)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,12 +22,14 @@ public class Favorite {
     @GeneratedValue
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "venue_id")
     private Venue venue;
 
-    @Column(name = "added_at")
-    private LocalDateTime addedAt;
+    @Column(name = "created_at", nullable = false)
+    private LocalDateTime createdAt;
 }

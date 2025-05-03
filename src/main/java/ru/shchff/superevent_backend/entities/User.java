@@ -21,7 +21,7 @@ public class User
     @Column(nullable = false)
     private String surname;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
@@ -43,6 +43,6 @@ public class User
     @Column(nullable = false)
     private UserStatus status;
 
-    @Column(name= "created_ad", nullable = false)
+    @Column(name= "created_at", nullable = false)
     private LocalDateTime createdAt;
 }

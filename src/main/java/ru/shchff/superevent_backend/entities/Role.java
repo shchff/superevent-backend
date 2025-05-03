@@ -2,5 +2,5 @@ package ru.shchff.superevent_backend.entities;
 
 public enum Role
 {
-    CLIENT, VENUE_OWNER, MODERATOR
+    ROLE_CLIENT, ROLE_VENUE_OWNER, ROLE_MODERATOR
 }

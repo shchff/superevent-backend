@@ -4,20 +4,24 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.annotation.*;
 import ru.shchff.superevent_backend.config.security.JwtTokenUtil;
 import ru.shchff.superevent_backend.config.security.UserDetailsServiceImpl;
 import ru.shchff.superevent_backend.dto.AuthRequest;
 import ru.shchff.superevent_backend.dto.AuthResponse;
 import ru.shchff.superevent_backend.dto.RegisterRequest;
 import ru.shchff.superevent_backend.services.UserService;
+import ru.shchff.superevent_backend.util.UserErrorResponse;
+import ru.shchff.superevent_backend.util.UserNotCreatedException;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
@@ -32,7 +36,21 @@ public class AuthController
 
     @Operation(summary = "Регистрация нового пользователя")
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequest request,
+                                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors())
+        {
+            StringBuilder errorMessage = new StringBuilder();
+            List<FieldError> errors = bindingResult.getFieldErrors();
+            for (FieldError error : errors)
+            {
+                errorMessage.append(error.getField())
+                        .append(" - ").append(error.getDefaultMessage())
+                        .append(";");
+            }
+
+            throw new UserNotCreatedException(errorMessage.toString());
+        }
         userService.registerUser(request);
         return ResponseEntity.ok(generateAuthResponse(request.getEmail()));
     }
@@ -49,6 +67,17 @@ public class AuthController
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         String token = jwtTokenUtil.generateToken(userDetails);
         return new AuthResponse(token);
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<UserErrorResponse> handleException(UserNotCreatedException e)
+    {
+        UserErrorResponse response = new UserErrorResponse(
+          e.getMessage(),
+          System.currentTimeMillis()
+        );
+
+        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
     }
 
 }
