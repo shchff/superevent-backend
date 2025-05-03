@@ -1,5 +1,7 @@
 package ru.shchff.superevent_backend.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -12,10 +14,12 @@ import ru.shchff.superevent_backend.util.UserNotFoundException;
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
+@Tag(name = "Пользователи")
 public class UserController
 {
     private final UserService userService;
 
+    @Operation(summary = "Получение пользователя по id")
     @GetMapping("/{id}")
     public User getUser(@PathVariable("id") long id)
     {
@@ -26,7 +30,7 @@ public class UserController
     private ResponseEntity<UserErrorResponse> handleException(UserNotFoundException e)
     {
         UserErrorResponse response = new UserErrorResponse(
-                "Person with this id was not found!",
+                "Юзер с данным id не найден!",
                 System.currentTimeMillis()
         );
 

@@ -9,6 +9,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
@@ -18,6 +19,7 @@ import ru.shchff.superevent_backend.dto.AuthRequest;
 import ru.shchff.superevent_backend.dto.AuthResponse;
 import ru.shchff.superevent_backend.dto.RegisterRequest;
 import ru.shchff.superevent_backend.services.UserService;
+import ru.shchff.superevent_backend.util.UserAlreadyExistsException;
 import ru.shchff.superevent_backend.util.UserErrorResponse;
 import ru.shchff.superevent_backend.util.UserNotCreatedException;
 
@@ -51,7 +53,9 @@ public class AuthController
 
             throw new UserNotCreatedException(errorMessage.toString());
         }
+
         userService.registerUser(request);
+
         return ResponseEntity.ok(generateAuthResponse(request.getEmail()));
     }
 
@@ -69,15 +73,35 @@ public class AuthController
         return new AuthResponse(token);
     }
 
+    private ResponseEntity<UserErrorResponse> handleException(UsernameNotFoundException e)
+    {
+        return ResponseEntity
+                .status(HttpStatus.NOT_FOUND)
+                .body(new UserErrorResponse(
+                        e.getMessage(),
+                        System.currentTimeMillis()
+                ));
+    }
+
     @ExceptionHandler
     private ResponseEntity<UserErrorResponse> handleException(UserNotCreatedException e)
     {
-        UserErrorResponse response = new UserErrorResponse(
-          e.getMessage(),
-          System.currentTimeMillis()
-        );
-
-        return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        return ResponseEntity
+            .status(HttpStatus.BAD_REQUEST)
+            .body(new UserErrorResponse(
+                    e.getMessage(),
+                    System.currentTimeMillis()
+            ));
     }
 
+    @ExceptionHandler
+    private ResponseEntity<UserErrorResponse> handleException(UserAlreadyExistsException e)
+    {
+        return ResponseEntity
+            .status(HttpStatus.CONFLICT)
+            .body(new UserErrorResponse(
+                    e.getMessage(),
+                    System.currentTimeMillis()
+            ));
+    }
 }
