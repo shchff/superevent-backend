@@ -1,6 +1,7 @@
 package ru.shchff.superevent_backend.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ import ru.shchff.superevent_backend.dto.AuthResponse;
 import ru.shchff.superevent_backend.dto.RegisterRequest;
 import ru.shchff.superevent_backend.services.UserService;
 import ru.shchff.superevent_backend.util.UserAlreadyExistsException;
-import ru.shchff.superevent_backend.util.UserErrorResponse;
+import ru.shchff.superevent_backend.util.ErrorResponse;
 import ru.shchff.superevent_backend.util.UserNotCreatedException;
 
 import java.util.List;
@@ -37,6 +38,8 @@ public class AuthController
     private final UserService userService;
 
     @Operation(summary = "Регистрация нового пользователя")
+    @ApiResponse(responseCode = "200", description = "Регистрация успешна")
+    @ApiResponse(responseCode = "405", description = "Пользователь с таким email уже существует")
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequest request,
                                                  BindingResult bindingResult) {
@@ -73,33 +76,33 @@ public class AuthController
         return new AuthResponse(token);
     }
 
-    private ResponseEntity<UserErrorResponse> handleException(UsernameNotFoundException e)
+    private ResponseEntity<ErrorResponse> handleException(UsernameNotFoundException e)
     {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
-                .body(new UserErrorResponse(
+                .body(new ErrorResponse(
                         e.getMessage(),
                         System.currentTimeMillis()
                 ));
     }
 
     @ExceptionHandler
-    private ResponseEntity<UserErrorResponse> handleException(UserNotCreatedException e)
+    private ResponseEntity<ErrorResponse> handleException(UserNotCreatedException e)
     {
         return ResponseEntity
             .status(HttpStatus.BAD_REQUEST)
-            .body(new UserErrorResponse(
+            .body(new ErrorResponse(
                     e.getMessage(),
                     System.currentTimeMillis()
             ));
     }
 
     @ExceptionHandler
-    private ResponseEntity<UserErrorResponse> handleException(UserAlreadyExistsException e)
+    private ResponseEntity<ErrorResponse> handleException(UserAlreadyExistsException e)
     {
         return ResponseEntity
             .status(HttpStatus.CONFLICT)
-            .body(new UserErrorResponse(
+            .body(new ErrorResponse(
                     e.getMessage(),
                     System.currentTimeMillis()
             ));
