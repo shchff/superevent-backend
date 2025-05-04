@@ -7,7 +7,7 @@ import lombok.Data;
 import ru.shchff.superevent_backend.entities.Role;
 
 @Data
-public class RegisterRequest
+public class RegisterRequestDto
 {
     @NotBlank(message = "Имя не может быть пустым")
     private String name;

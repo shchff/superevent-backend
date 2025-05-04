@@ -5,7 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.shchff.superevent_backend.dto.RegisterRequest;
+import ru.shchff.superevent_backend.dto.RegisterRequestDto;
 import ru.shchff.superevent_backend.entities.Role;
 import ru.shchff.superevent_backend.entities.User;
 import ru.shchff.superevent_backend.entities.UserStatus;
@@ -24,7 +24,7 @@ public class UserService {
     private final ModelMapper modelMapper;
 
     @Transactional
-    public void registerUser(RegisterRequest request) {
+    public void registerUser(RegisterRequestDto request) {
         if (userRepository.existsByEmail(request.getEmail())) {
             throw new UserAlreadyExistsException(request.getEmail());
         }

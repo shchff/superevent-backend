@@ -4,7 +4,9 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import ru.shchff.superevent_backend.dto.VenueCreationRequest;
+import ru.shchff.superevent_backend.dto.ModerationRequestDto;
+import ru.shchff.superevent_backend.dto.VenueCreationRequestDto;
+import ru.shchff.superevent_backend.entities.ModerationRequest;
 import ru.shchff.superevent_backend.entities.Venue;
 
 @Configuration
@@ -17,7 +19,7 @@ public class GeneralConfig
         modelMapper.getConfiguration()
                 .setMatchingStrategy(MatchingStrategies.STRICT);
 
-        modelMapper.typeMap(VenueCreationRequest.class, Venue.class)
+        modelMapper.typeMap(VenueCreationRequestDto.class, Venue.class)
                 .addMappings(mapper -> {
                     mapper.skip(Venue::setId);
                     mapper.skip(Venue::setStatus);
@@ -25,6 +27,12 @@ public class GeneralConfig
                     mapper.skip(Venue::setTags);
                     mapper.skip(Venue::setImages);
                 });
+
+        modelMapper.typeMap(ModerationRequest.class, ModerationRequestDto.class)
+                .addMappings(mapper -> {
+                    mapper.map(src -> src.getVenue().getId(), ModerationRequestDto::setVenueId);
+                });
+
         return modelMapper;
     }
 }

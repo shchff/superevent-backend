@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.shchff.superevent_backend.dto.VenueCreationRequest;
+import ru.shchff.superevent_backend.dto.VenueCreationRequestDto;
 import ru.shchff.superevent_backend.entities.*;
 import ru.shchff.superevent_backend.repositories.*;
 import ru.shchff.superevent_backend.util.CategoryNotFoundException;
@@ -39,7 +39,7 @@ public class VenueService
     }
 
     @Transactional
-    public void createVenue(VenueCreationRequest request)
+    public void createVenue(VenueCreationRequestDto request)
     {
         Venue venue = modelMapper.map(request, Venue.class);
 

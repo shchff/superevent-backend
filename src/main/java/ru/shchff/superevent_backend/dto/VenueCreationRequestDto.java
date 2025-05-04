@@ -8,7 +8,7 @@ import java.math.BigDecimal;
 import java.util.List;
 
 @Data
-public class VenueCreationRequest
+public class VenueCreationRequestDto
 {
     @NotNull(message = "У площадки должен быть представитель")
     private long ownerId;

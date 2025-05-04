@@ -18,7 +18,7 @@ import ru.shchff.superevent_backend.config.security.JwtTokenUtil;
 import ru.shchff.superevent_backend.config.security.UserDetailsServiceImpl;
 import ru.shchff.superevent_backend.dto.AuthRequest;
 import ru.shchff.superevent_backend.dto.AuthResponse;
-import ru.shchff.superevent_backend.dto.RegisterRequest;
+import ru.shchff.superevent_backend.dto.RegisterRequestDto;
 import ru.shchff.superevent_backend.services.UserService;
 import ru.shchff.superevent_backend.util.UserAlreadyExistsException;
 import ru.shchff.superevent_backend.util.ErrorResponse;
@@ -41,7 +41,7 @@ public class AuthController
     @ApiResponse(responseCode = "200", description = "Регистрация успешна")
     @ApiResponse(responseCode = "405", description = "Пользователь с таким email уже существует")
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequest request,
+    public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequestDto request,
                                                  BindingResult bindingResult) {
         if (bindingResult.hasErrors())
         {

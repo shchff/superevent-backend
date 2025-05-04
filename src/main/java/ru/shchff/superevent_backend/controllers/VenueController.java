@@ -8,7 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.shchff.superevent_backend.dto.VenueCreationRequest;
+import ru.shchff.superevent_backend.dto.VenueCreationRequestDto;
 import ru.shchff.superevent_backend.entities.Venue;
 import ru.shchff.superevent_backend.services.VenueService;
 import ru.shchff.superevent_backend.util.CategoryNotFoundException;
@@ -57,9 +57,9 @@ public class VenueController
     }
 
     @PostMapping
-    public HttpStatus createVenue(@RequestBody VenueCreationRequest venueCreationRequest)
+    public HttpStatus createVenue(@RequestBody VenueCreationRequestDto venueCreationRequestDto)
     {
-        venueService.createVenue(venueCreationRequest);
+        venueService.createVenue(venueCreationRequestDto);
         return HttpStatus.CREATED;
     }
 
