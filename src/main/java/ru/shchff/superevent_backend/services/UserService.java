@@ -41,6 +41,6 @@ public class UserService {
     public User findOne(long id)
     {
         Optional<User> foundUser = userRepository.findById(id);
-        return foundUser.orElseThrow(UserNotFoundException::new);
+        return foundUser.orElseThrow(() -> new UserNotFoundException(id));
     }
 }

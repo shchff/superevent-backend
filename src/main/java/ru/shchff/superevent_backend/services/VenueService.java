@@ -26,6 +26,6 @@ public class VenueService
     public Venue findVenue(long id)
     {
         Optional<Venue> foundVenue = venueRepository.findById(id);
-        return foundVenue.orElseThrow(VenueNotFoundException::new);
+        return foundVenue.orElseThrow(() -> new VenueNotFoundException(id));
     }
 }

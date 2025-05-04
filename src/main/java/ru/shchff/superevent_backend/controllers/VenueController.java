@@ -47,13 +47,12 @@ public class VenueController
     private ResponseEntity<ErrorResponse> handleException(VenueNotFoundException e)
     {
         ErrorResponse response = new ErrorResponse(
-                "Площадка с данным id не найдена!",
+                e.getMessage(),
                 System.currentTimeMillis()
         );
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
-    
-
+    public
 }
