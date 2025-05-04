@@ -12,9 +12,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "venues")
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 public class Venue
 {
     @Id
@@ -35,7 +33,7 @@ public class Venue
     private String description;
 
     private String city;
-    private String string;
+    private String street;
     private String building;
 
     @Column(name = "working_hours")

@@ -8,8 +8,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.shchff.superevent_backend.dto.VenueCreationRequest;
 import ru.shchff.superevent_backend.entities.Venue;
 import ru.shchff.superevent_backend.services.VenueService;
+import ru.shchff.superevent_backend.util.CategoryNotFoundException;
 import ru.shchff.superevent_backend.util.ErrorResponse;
 import ru.shchff.superevent_backend.util.UserNotFoundException;
 import ru.shchff.superevent_backend.util.VenueNotFoundException;
@@ -54,5 +56,31 @@ public class VenueController
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
 
-    public
+    @PostMapping
+    public HttpStatus createVenue(@RequestBody VenueCreationRequest venueCreationRequest)
+    {
+        venueService.createVenue(venueCreationRequest);
+        return HttpStatus.CREATED;
+    }
+
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handleException(UserNotFoundException e)
+    {
+        ErrorResponse response = new ErrorResponse(
+                e.getMessage(),
+                System.currentTimeMillis()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
+    @ExceptionHandler
+    private ResponseEntity<ErrorResponse> handleException(CategoryNotFoundException e)
+    {
+        ErrorResponse response = new ErrorResponse(
+                e.getMessage(),
+                System.currentTimeMillis()
+        );
+
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+    }
 }
