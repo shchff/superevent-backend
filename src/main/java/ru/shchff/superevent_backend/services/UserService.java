@@ -6,6 +6,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.shchff.superevent_backend.dto.RegisterRequestDto;
+import ru.shchff.superevent_backend.dto.UserUpdateDto;
 import ru.shchff.superevent_backend.entities.Role;
 import ru.shchff.superevent_backend.entities.User;
 import ru.shchff.superevent_backend.entities.UserStatus;
@@ -42,5 +43,29 @@ public class UserService {
     {
         Optional<User> foundUser = userRepository.findById(id);
         return foundUser.orElseThrow(() -> new UserNotFoundException(id));
+    }
+
+    @Transactional
+    public User updateUser(long id, UserUpdateDto updateDto) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserNotFoundException(id));
+
+        if (updateDto.getName() != null) {
+            user.setName(updateDto.getName());
+        }
+        if (updateDto.getSurname() != null) {
+            user.setSurname(updateDto.getSurname());
+        }
+
+        if (user.getRole() == Role.VENUE_OWNER) {
+            if (updateDto.getPhoneNumber() != null) {
+                user.setPhoneNumber(updateDto.getPhoneNumber());
+            }
+            if (updateDto.getRegistrationCertificatePath() != null) {
+                user.setRegistrationCertificatePath(updateDto.getRegistrationCertificatePath());
+            }
+        }
+
+        return userRepository.save(user);
     }
 }

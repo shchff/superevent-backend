@@ -10,8 +10,10 @@ import ru.shchff.superevent_backend.entities.Role;
 public class RegisterRequestDto
 {
     @NotBlank(message = "Имя не может быть пустым")
+    @Size(min = 2, max = 50, message = "Имя должно быть от 2 до 50 символов")
     private String name;
 
+    @Size(min = 2, max = 50, message = "Фамилия должна быть от 2 до 50 символов")
     @NotBlank(message = "Фамилия не может быть пустой")
     private String surname;
 
