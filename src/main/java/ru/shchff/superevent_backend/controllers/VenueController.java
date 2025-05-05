@@ -73,6 +73,7 @@ public class VenueController
 
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
     }
+
     @ExceptionHandler
     private ResponseEntity<ErrorResponse> handleException(CategoryNotFoundException e)
     {
