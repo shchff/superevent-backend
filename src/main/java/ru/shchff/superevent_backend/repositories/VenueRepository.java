@@ -7,5 +7,5 @@ import java.util.List;
 
 public interface VenueRepository extends JpaRepository<Venue, Long>
 {
-    List<Venue> findAllByOwnerId(long ownerId);
+    List<Venue> findAllByOwnerId(Long ownerId);
 }

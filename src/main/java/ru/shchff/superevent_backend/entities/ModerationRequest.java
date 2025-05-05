@@ -30,4 +30,11 @@ public class ModerationRequest {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private ModerationStatus status;
+
+    public ModerationRequest(Venue venue)
+    {
+        this.venue = venue;
+        this.submittedAt = LocalDateTime.now();
+        this.status = ModerationStatus.PENDING;
+    }
 }

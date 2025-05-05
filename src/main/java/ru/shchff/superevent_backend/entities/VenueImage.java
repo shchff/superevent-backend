@@ -21,4 +21,10 @@ public class VenueImage {
     @ManyToOne
     @JoinColumn(name = "venue_id", nullable = false)
     private Venue venue;
+
+    public VenueImage(String imagePath, Venue venue)
+    {
+        this.imagePath = imagePath;
+        this.venue = venue;
+    }
 }

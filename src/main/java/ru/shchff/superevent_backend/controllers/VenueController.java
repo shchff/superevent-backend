@@ -1,15 +1,16 @@
 package ru.shchff.superevent_backend.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.*;
 import ru.shchff.superevent_backend.dto.VenueCreationRequestDto;
-import ru.shchff.superevent_backend.entities.Venue;
+import ru.shchff.superevent_backend.dto.VenueDto;
+import ru.shchff.superevent_backend.dto.VenueUpdateDto;
 import ru.shchff.superevent_backend.services.VenueService;
 import ru.shchff.superevent_backend.util.CategoryNotFoundException;
 import ru.shchff.superevent_backend.util.ErrorResponse;
@@ -27,61 +28,82 @@ public class VenueController
     private final VenueService venueService;
 
     @Operation(summary = "Получение всех площадок")
-    @ApiResponse(responseCode = "200", description = "Площадки успешно получена")
+    @ApiResponse(responseCode = "200", description = "Площадки успешно получены")
     @GetMapping
-    public List<Venue> getVenues()
+    public List<VenueDto> getVenues()
     {
         return venueService.getVenues();
     }
 
-    @Operation(summary = "Получение площадки", description = "Получение площадки по её id")
+    @Operation(summary = "Получение площадки по id")
     @ApiResponse(responseCode = "200", description = "Площадка успешно получена")
-    @ApiResponse(responseCode = "404", description = "Площадка с данным id не найдена")
+    @ApiResponse(responseCode = "404", description = "Площадка не найдена")
     @GetMapping("/{id}")
-    public Venue getVenueById(
-            @Parameter(description = "Id площадки", example = "1") @PathVariable("id") long id
-    )
+    public VenueDto getVenueById(@PathVariable long id)
     {
         return venueService.findVenue(id);
     }
 
-    @ExceptionHandler
-    private ResponseEntity<ErrorResponse> handleException(VenueNotFoundException e)
-    {
-        ErrorResponse response = new ErrorResponse(
-                e.getMessage(),
-                System.currentTimeMillis()
-        );
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-    }
-
+    @Operation(summary = "Создание площадки")
     @PostMapping
-    public HttpStatus createVenue(@RequestBody VenueCreationRequestDto venueCreationRequestDto)
-    {
-        venueService.createVenue(venueCreationRequestDto);
-        return HttpStatus.CREATED;
+    @ResponseStatus(HttpStatus.CREATED)
+    public VenueDto createVenue(@RequestBody VenueCreationRequestDto request) {
+        return venueService.createVenue(request);
+    }
+
+    @Operation(summary = "Обновление информации о площадке")
+    @ApiResponse(responseCode = "200", description = "Информация обновлена")
+    @PatchMapping("/{id}")
+    public VenueDto updateVenue(
+            @PathVariable long id,
+            @RequestBody VenueUpdateDto updateDto,
+            @RequestParam Long ownerId) {
+        return venueService.updateVenue(id, updateDto, ownerId);
+    }
+
+
+    @Operation(summary = "Обновление тегов площадки")
+    @ApiResponse(responseCode = "200", description = "Теги обновлены")
+    @PutMapping("/{id}/tags")
+    public VenueDto updateVenueTags(
+            @PathVariable long id,
+            @RequestBody List<Long> tagIds,
+            @RequestParam Long ownerId) {
+        return venueService.updateVenueTags(id, tagIds, ownerId);
+    }
+
+    @Operation(summary = "Получение площадок владельца")
+    @ApiResponse(responseCode = "200", description = "Список площадок получен")
+    @GetMapping("/owner/{ownerId}")
+    public List<VenueDto> getVenuesByOwner(@PathVariable Long ownerId) {
+        return venueService.getVenuesByOwner(ownerId);
     }
 
     @ExceptionHandler
-    private ResponseEntity<ErrorResponse> handleException(UserNotFoundException e)
-    {
+    public ResponseEntity<ErrorResponse> handleException(VenueNotFoundException e) {
+        return createErrorResponse(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(UserNotFoundException e) {
+        return createErrorResponse(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(CategoryNotFoundException e) {
+        return createErrorResponse(e, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler
+    public ResponseEntity<ErrorResponse> handleException(AccessDeniedException e) {
+        return createErrorResponse(e, HttpStatus.FORBIDDEN);
+    }
+
+    private ResponseEntity<ErrorResponse> createErrorResponse(Exception e, HttpStatus status) {
         ErrorResponse response = new ErrorResponse(
                 e.getMessage(),
                 System.currentTimeMillis()
         );
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-    }
-
-    @ExceptionHandler
-    private ResponseEntity<ErrorResponse> handleException(CategoryNotFoundException e)
-    {
-        ErrorResponse response = new ErrorResponse(
-                e.getMessage(),
-                System.currentTimeMillis()
-        );
-
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+        return ResponseEntity.status(status).body(response);
     }
 }
