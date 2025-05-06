@@ -16,7 +16,8 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class VenueService {
+public class VenueService
+{
     private final VenueRepository venueRepository;
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
@@ -25,21 +26,24 @@ public class VenueService {
     private final ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
-    public List<VenueDto> getVenues() {
+    public List<VenueDto> getVenues()
+    {
         return venueRepository.findAll().stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
     @Transactional(readOnly = true)
-    public VenueDto findVenue(long id) {
+    public VenueDto findVenue(long id)
+    {
         Venue venue = venueRepository.findById(id)
                 .orElseThrow(() -> new VenueNotFoundException(id));
         return convertToDto(venue);
     }
 
     @Transactional
-    public VenueDto createVenue(VenueCreationRequestDto request) {
+    public VenueDto createVenue(VenueCreationRequestDto request)
+    {
         Venue venue = modelMapper.map(request, Venue.class);
 
         User owner = userRepository.findById(request.getOwnerId())
@@ -92,16 +96,19 @@ public class VenueService {
     }
 
     @Transactional
-    public VenueDto updateVenueTags(long venueId, List<Long> tagIds, Long ownerId) {
+    public VenueDto updateVenueTags(long venueId, List<Long> tagIds, Long ownerId)
+    {
         Venue venue = venueRepository.findById(venueId)
                 .orElseThrow(() -> new VenueNotFoundException(venueId));
 
-        if (!venue.getOwner().getId().equals(ownerId)) {
+        if (!venue.getOwner().getId().equals(ownerId))
+        {
             throw new AccessDeniedException("Только владелец может изменять теги");
         }
 
         venue.getTags().clear();
-        if (tagIds != null && !tagIds.isEmpty()) {
+        if (tagIds != null && !tagIds.isEmpty())
+        {
             Set<Tag> tags = new HashSet<>(tagRepository.findAllById(tagIds));
             venue.setTags(tags);
         }
@@ -110,13 +117,15 @@ public class VenueService {
     }
 
     @Transactional(readOnly = true)
-    public List<VenueDto> getVenuesByOwner(Long ownerId) {
+    public List<VenueDto> getVenuesByOwner(Long ownerId)
+    {
         return venueRepository.findAllByOwnerId(ownerId).stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
-    private VenueDto convertToDto(Venue venue) {
+    private VenueDto convertToDto(Venue venue)
+    {
         VenueDto dto = modelMapper.map(venue, VenueDto.class);
         dto.setOwnerId(venue.getOwner().getId());
         dto.setCategoryId(venue.getCategory().getId());
@@ -129,7 +138,8 @@ public class VenueService {
         return dto;
     }
 
-    private void updateVenueFields(Venue venue, VenueUpdateDto updateDto) {
+    private void updateVenueFields(Venue venue, VenueUpdateDto updateDto)
+    {
         if (updateDto.getName() != null) venue.setName(updateDto.getName());
         if (updateDto.getDescription() != null) venue.setDescription(updateDto.getDescription());
         if (updateDto.getCity() != null) venue.setCity(updateDto.getCity());
@@ -138,10 +148,13 @@ public class VenueService {
         if (updateDto.getWorkingHours() != null) venue.setWorkingHours(updateDto.getWorkingHours());
         if (updateDto.getPrice() != null) venue.setPrice(updateDto.getPrice());
         if (updateDto.getCapacity() != null) venue.setCapacity(updateDto.getCapacity());
-        if (updateDto.getRegistrationCertificatePath() != null) {
+        if (updateDto.getRegistrationCertificatePath() != null)
+
+        {
             venue.setRegistrationCertificatePath(updateDto.getRegistrationCertificatePath());
         }
-        if (updateDto.getCategoryId() != null) {
+        if (updateDto.getCategoryId() != null)
+        {
             Category category = categoryRepository.findById(updateDto.getCategoryId())
                     .orElseThrow(() -> new CategoryNotFoundException(updateDto.getCategoryId()));
             venue.setCategory(category);
