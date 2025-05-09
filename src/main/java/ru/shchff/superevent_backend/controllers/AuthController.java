@@ -42,7 +42,8 @@ public class AuthController
     @ApiResponse(responseCode = "405", description = "Пользователь с таким email уже существует")
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(@RequestBody @Valid RegisterRequestDto request,
-                                                 BindingResult bindingResult) {
+                                                 BindingResult bindingResult)
+    {
         if (bindingResult.hasErrors())
         {
             StringBuilder errorMessage = new StringBuilder();
@@ -64,13 +65,15 @@ public class AuthController
 
     @Operation(summary = "Аутентификация пользователя")
     @PostMapping("/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request) {
+    public ResponseEntity<AuthResponse> login(@RequestBody AuthRequest request)
+    {
         authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         return ResponseEntity.ok(generateAuthResponse(request.getEmail()));
     }
 
-    private AuthResponse generateAuthResponse(String email) {
+    private AuthResponse generateAuthResponse(String email)
+    {
         UserDetails userDetails = userDetailsService.loadUserByUsername(email);
         String token = jwtTokenUtil.generateToken(userDetails);
         return new AuthResponse(token);

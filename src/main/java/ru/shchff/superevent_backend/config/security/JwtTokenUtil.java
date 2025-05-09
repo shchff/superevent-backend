@@ -26,6 +26,11 @@ public class JwtTokenUtil
     public String generateToken(UserDetails userDetails)
     {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("role", userDetails.getAuthorities().stream()
+                .findFirst()
+                .map(Object::toString)
+                .orElse("GUEST")); // fallback на случай, если нет роли
+
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(userDetails.getUsername())
@@ -34,6 +39,7 @@ public class JwtTokenUtil
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
+
 
     public boolean validateToken(String token, UserDetails userDetails)
     {
