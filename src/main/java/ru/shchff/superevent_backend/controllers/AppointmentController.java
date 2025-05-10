@@ -25,4 +25,18 @@ public class AppointmentController
     {
         return appointmentService.getAppointmentsByVenueFromToday(venueId);
     }
+
+    @Operation(summary = "Бронирование площадки")
+    @PostMapping
+    public AppointmentDto makeAppointment(@RequestBody AppointmentDto appointmentDto)
+    {
+        return appointmentService.createAppointment(appointmentDto);
+    }
+
+    @Operation(summary = "Удаление брони")
+    @DeleteMapping("/{id}")
+    public void deleteAppointment(@PathVariable Long id)
+    {
+        appointmentService.deleteAppointment(id);
+    }
 }
