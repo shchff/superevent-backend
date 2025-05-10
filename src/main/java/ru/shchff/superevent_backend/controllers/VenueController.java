@@ -30,9 +30,14 @@ public class VenueController
     @Operation(summary = "Получение всех площадок")
     @ApiResponse(responseCode = "200", description = "Площадки успешно получены")
     @GetMapping
-    public List<VenueDto> getVenues()
+    public List<VenueDto> getVenues(
+            @RequestParam(required = false) String search,
+            @RequestParam(required = false) String city,
+            @RequestParam(required = false) String price,
+            @RequestParam(required = false) String category
+    )
     {
-        return venueService.getVenues();
+        return venueService.getVenues(search, city, price, category);
     }
 
     @Operation(summary = "Получение площадки по id")

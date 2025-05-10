@@ -26,9 +26,10 @@ public class VenueService
     private final ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
-    public List<VenueDto> getVenues()
+    public List<VenueDto> getVenues(String search, String city, String price, String category)
     {
-        return venueRepository.findAll().stream()
+        List<Venue> venues = venueRepository.findByFilters(search, city, price, category);
+        return venues.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
@@ -57,12 +58,14 @@ public class VenueService
         venue.setStatus(VenueStatus.PENDING);
         venue.setCreatedAt(LocalDateTime.now());
 
-        if (request.getTagIds() != null && !request.getTagIds().isEmpty()) {
+        if (request.getTagIds() != null && !request.getTagIds().isEmpty())
+        {
             Set<Tag> tags = new HashSet<>(tagRepository.findAllById(request.getTagIds()));
             venue.setTags(tags);
         }
 
-        if (request.getImagesPaths() != null && !request.getImagesPaths().isEmpty()) {
+        if (request.getImagesPaths() != null && !request.getImagesPaths().isEmpty())
+        {
             List<VenueImage> images = request.getImagesPaths().stream()
                     .map(path -> new VenueImage(path, venue))
                     .collect(Collectors.toList());
@@ -78,7 +81,8 @@ public class VenueService
     }
 
     @Transactional
-    public VenueDto updateVenue(long id, VenueUpdateDto updateDto, Long ownerId) {
+    public VenueDto updateVenue(long id, VenueUpdateDto updateDto, Long ownerId)
+    {
         Venue venue = venueRepository.findById(id)
                 .orElseThrow(() -> new VenueNotFoundException(id));
 
