@@ -1,15 +1,14 @@
 package ru.shchff.superevent_backend.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.shchff.superevent_backend.dto.AppointmentDto;
-import ru.shchff.superevent_backend.services.AppointmentService;
-import ru.shchff.superevent_backend.util.CategoryNotFoundException;
+import ru.shchff.superevent_backend.dto.ReviewCreationRequest;
+import ru.shchff.superevent_backend.dto.ReviewDto;
+import ru.shchff.superevent_backend.services.ReviewService;
 import ru.shchff.superevent_backend.util.ErrorResponse;
 import ru.shchff.superevent_backend.util.UserNotFoundException;
 import ru.shchff.superevent_backend.util.VenueNotFoundException;
@@ -17,33 +16,39 @@ import ru.shchff.superevent_backend.util.VenueNotFoundException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/appointments")
+@RequestMapping("/reviews")
 @RequiredArgsConstructor
-@Tag(name = "Бронирование")
-public class AppointmentController
+@Tag(name = "Отзывы")
+public class ReviewController
 {
-    private final AppointmentService appointmentService;
+    private final ReviewService reviewService;
 
-    @Operation(summary = "Получить записи на площадку с сегодняшней даты")
-    @ApiResponse(responseCode = "200", description = "Список записей получен")
-    @GetMapping("/venue/{venueId}")
-    public List<AppointmentDto> getAppointmentsByVenue(@PathVariable Long venueId)
-    {
-        return appointmentService.getAppointmentsByVenueFromToday(venueId);
-    }
-
-    @Operation(summary = "Бронирование площадки")
     @PostMapping
-    public AppointmentDto makeAppointment(@RequestBody AppointmentDto appointmentDto)
+    @Operation(summary = "Добавление отзыва клиента")
+    public void addReview(@RequestBody ReviewCreationRequest request)
     {
-        return appointmentService.createAppointment(appointmentDto);
+        reviewService.createReview(request);
     }
 
-    @Operation(summary = "Удаление брони")
     @DeleteMapping("/{id}")
-    public void deleteAppointment(@PathVariable Long id)
+    @Operation(summary = "Удаление отзыва")
+    public void deleteReview(@PathVariable Long id)
     {
-        appointmentService.deleteAppointment(id);
+        reviewService.deleteReview(id);
+    }
+
+    @GetMapping("/users/{id}")
+    @Operation(summary = "Получение всех отзывов пользователя")
+    public List<ReviewDto> getAllUsersReviews(@PathVariable Long userId)
+    {
+        return reviewService.getAllUsersReviews(userId);
+    }
+
+    @GetMapping("/venues/{id}")
+    @Operation(summary = "Получение всех отзывов площадки")
+    public List<ReviewDto> getAllVenuesReviews(@PathVariable Long userId)
+    {
+        return reviewService.getAllVenuesReviews(userId);
     }
 
     @ExceptionHandler
