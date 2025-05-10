@@ -164,4 +164,11 @@ public class VenueService
             venue.setCategory(category);
         }
     }
+
+    @Transactional(readOnly = true)
+    public List<Tag> getTagsByVenueId(Long venueId) {
+        Venue venue = venueRepository.findById(venueId)
+                .orElseThrow(() -> new VenueNotFoundException(venueId));
+        return new ArrayList<>(venue.getTags());
+    }
 }

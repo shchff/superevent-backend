@@ -21,9 +21,9 @@ public class VenueDto {
     private String workingHours;
     private BigDecimal price;
     private int capacity;
-    private Long categoryId; // вместо объекта Category
+    private Long categoryId;
     private VenueStatus status;
     private LocalDateTime createdAt;
-    private Set<Long> tagIds; // вместо Set<Tag>
-    private List<String> imagesPaths; // вместо List<VenueImage>
+    private Set<Long> tagIds;
+    private List<String> imagesPaths;
 }

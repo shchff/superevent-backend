@@ -2,7 +2,6 @@ package ru.shchff.superevent_backend.controllers;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.shchff.superevent_backend.dto.VenueCreationRequestDto;
 import ru.shchff.superevent_backend.dto.VenueDto;
 import ru.shchff.superevent_backend.dto.VenueUpdateDto;
+import ru.shchff.superevent_backend.entities.Tag;
 import ru.shchff.superevent_backend.services.VenueService;
 import ru.shchff.superevent_backend.util.CategoryNotFoundException;
 import ru.shchff.superevent_backend.util.ErrorResponse;
@@ -22,7 +22,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/venues")
 @RequiredArgsConstructor
-@Tag(name = "Площадки")
+@io.swagger.v3.oas.annotations.tags.Tag(name = "Площадки")
 public class VenueController
 {
     private final VenueService venueService;
@@ -66,7 +66,6 @@ public class VenueController
         return venueService.updateVenue(id, updateDto, ownerId);
     }
 
-
     @Operation(summary = "Обновление тегов площадки")
     @ApiResponse(responseCode = "200", description = "Теги обновлены")
     @PutMapping("/{id}/tags")
@@ -104,11 +103,20 @@ public class VenueController
         return createErrorResponse(e, HttpStatus.FORBIDDEN);
     }
 
-    private ResponseEntity<ErrorResponse> createErrorResponse(Exception e, HttpStatus status) {
+    private ResponseEntity<ErrorResponse> createErrorResponse(Exception e, HttpStatus status)
+    {
         ErrorResponse response = new ErrorResponse(
                 e.getMessage(),
                 System.currentTimeMillis()
         );
         return ResponseEntity.status(status).body(response);
+    }
+
+    @Operation(summary = "Получение тегов площадки по id")
+    @ApiResponse(responseCode = "200", description = "Теги успешно получены")
+    @ApiResponse(responseCode = "404", description = "Площадка не найдена")
+    @GetMapping("/{id}/tags")
+    public List<Tag> getTagsByVenueId(@PathVariable long id) {
+        return venueService.getTagsByVenueId(id);
     }
 }

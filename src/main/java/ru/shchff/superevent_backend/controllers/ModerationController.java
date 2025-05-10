@@ -25,19 +25,22 @@ public class ModerationController {
     private final ModerationService moderationService;
 
     @GetMapping
-    public List<ModerationRequestDto> getAllModerationRequests() {
+    public List<ModerationRequestDto> getAllModerationRequests()
+    {
         return moderationService.getAllModerationRequests();
     }
 
     @GetMapping("/{id}")
-    public ModerationRequestDto getModerationRequestById(@PathVariable Long id) {
+    public ModerationRequestDto getModerationRequestById(@PathVariable Long id)
+    {
         return moderationService.getModerationRequestById(id);
     }
 
     @PatchMapping("/{id}")
     public ModerationRequestDto updateModerationRequest(
             @PathVariable Long id,
-            @RequestBody ModerationRequestUpdateDto request) {
+            @RequestBody ModerationRequestUpdateDto request)
+    {
         return moderationService.updateModerationRequest(id, request);
     }
 
