@@ -16,10 +16,10 @@ import java.util.List;
 @RequestMapping("/tags")
 @RequiredArgsConstructor
 @io.swagger.v3.oas.annotations.tags.Tag(name = "Теги")
-public class TagController {
+public class TagController
+{
 
     private final TagService tagService;
-
 
     @GetMapping
     @Operation(summary = "Получение всех тегов")

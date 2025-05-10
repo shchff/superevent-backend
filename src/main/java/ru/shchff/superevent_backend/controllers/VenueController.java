@@ -52,7 +52,8 @@ public class VenueController
     @Operation(summary = "Создание площадки")
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public VenueDto createVenue(@RequestBody VenueCreationRequestDto request) {
+    public VenueDto createVenue(@RequestBody VenueCreationRequestDto request)
+    {
         return venueService.createVenue(request);
     }
 
@@ -62,7 +63,8 @@ public class VenueController
     public VenueDto updateVenue(
             @PathVariable long id,
             @RequestBody VenueUpdateDto updateDto,
-            @RequestParam Long ownerId) {
+            @RequestParam Long ownerId)
+    {
         return venueService.updateVenue(id, updateDto, ownerId);
     }
 
@@ -72,34 +74,40 @@ public class VenueController
     public VenueDto updateVenueTags(
             @PathVariable long id,
             @RequestBody List<Long> tagIds,
-            @RequestParam Long ownerId) {
+            @RequestParam Long ownerId)
+    {
         return venueService.updateVenueTags(id, tagIds, ownerId);
     }
 
     @Operation(summary = "Получение площадок владельца")
     @ApiResponse(responseCode = "200", description = "Список площадок получен")
     @GetMapping("/owner/{ownerId}")
-    public List<VenueDto> getVenuesByOwner(@PathVariable Long ownerId) {
+    public List<VenueDto> getVenuesByOwner(@PathVariable Long ownerId)
+    {
         return venueService.getVenuesByOwner(ownerId);
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleException(VenueNotFoundException e) {
+    public ResponseEntity<ErrorResponse> handleException(VenueNotFoundException e)
+    {
         return createErrorResponse(e, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleException(UserNotFoundException e) {
+    public ResponseEntity<ErrorResponse> handleException(UserNotFoundException e)
+    {
         return createErrorResponse(e, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleException(CategoryNotFoundException e) {
+    public ResponseEntity<ErrorResponse> handleException(CategoryNotFoundException e)
+    {
         return createErrorResponse(e, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler
-    public ResponseEntity<ErrorResponse> handleException(AccessDeniedException e) {
+    public ResponseEntity<ErrorResponse> handleException(AccessDeniedException e)
+    {
         return createErrorResponse(e, HttpStatus.FORBIDDEN);
     }
 

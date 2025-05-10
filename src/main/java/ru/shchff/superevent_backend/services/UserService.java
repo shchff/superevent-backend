@@ -46,7 +46,8 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUser(long id, UserUpdateDto updateDto) {
+    public User updateUser(long id, UserUpdateDto updateDto)
+    {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserNotFoundException(id));
 

@@ -20,26 +20,30 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class ModerationService {
+public class ModerationService
+{
     private final ModerationRequestRepository moderationRequestRepository;
     private final VenueRepository venueRepository;
     private final UserRepository userRepository;
     private final ModelMapper modelMapper;
 
-    public List<ModerationRequestDto> getAllModerationRequests() {
+    public List<ModerationRequestDto> getAllModerationRequests()
+    {
         return moderationRequestRepository.findAll().stream()
                 .map(request -> modelMapper.map(request, ModerationRequestDto.class))
                 .toList();
     }
 
-    public ModerationRequestDto getModerationRequestById(Long id) {
+    public ModerationRequestDto getModerationRequestById(Long id)
+    {
         ModerationRequest request = moderationRequestRepository.findById(id)
                 .orElseThrow(() -> new ModerationRequestNotFoundException(id));
         return modelMapper.map(request, ModerationRequestDto.class);
     }
 
     @Transactional
-    public ModerationRequestDto updateModerationRequest(Long id, ModerationRequestUpdateDto request) {
+    public ModerationRequestDto updateModerationRequest(Long id, ModerationRequestUpdateDto request)
+    {
         ModerationRequest moderationRequest = moderationRequestRepository.findById(id)
                 .orElseThrow(() -> new ModerationRequestNotFoundException(id));
 
@@ -63,7 +67,8 @@ public class ModerationService {
     }
 
     @Transactional
-    public BanResultDto toggleVenueBan(Long venueId, BanRequest request) {
+    public BanResultDto toggleVenueBan(Long venueId, BanRequest request)
+    {
         Venue venue = venueRepository.findById(venueId)
                 .orElseThrow(() -> new VenueNotFoundException(venueId));
 
@@ -77,13 +82,15 @@ public class ModerationService {
     }
 
     @Transactional
-    public BanResultDto toggleUserBan(Long userId, BanRequest request) {
+    public BanResultDto toggleUserBan(Long userId, BanRequest request)
+    {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
 
         user.setStatus(request.isBanned() ? UserStatus.BLOCKED : UserStatus.ACTIVE);
 
-        if (request.isBanned()) {
+        if (request.isBanned())
+        {
             venueRepository.findAllByOwnerId(userId)
                     .forEach(venue -> {
                         venue.setStatus(VenueStatus.BLOCKED);

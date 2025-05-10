@@ -12,10 +12,12 @@ import java.util.List;
 
 
 @Configuration
-public class SwaggerConfig {
+public class SwaggerConfig
+{
 
     @Bean
-    public OpenAPI supereventOpenAPI() {
+    public OpenAPI supereventOpenAPI()
+    {
         return new OpenAPI()
             .servers(List.of(
                 new Server()
