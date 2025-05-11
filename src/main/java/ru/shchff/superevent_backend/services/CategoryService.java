@@ -23,5 +23,4 @@ public class CategoryService
     {
         return categoryRepository.findById(id).orElseThrow(() -> new CategoryNotFoundException(id));
     }
-
 }

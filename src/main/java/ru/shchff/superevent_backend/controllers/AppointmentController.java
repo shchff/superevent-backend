@@ -9,7 +9,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import ru.shchff.superevent_backend.dto.AppointmentDto;
 import ru.shchff.superevent_backend.services.AppointmentService;
-import ru.shchff.superevent_backend.util.CategoryNotFoundException;
 import ru.shchff.superevent_backend.util.ErrorResponse;
 import ru.shchff.superevent_backend.util.UserNotFoundException;
 import ru.shchff.superevent_backend.util.VenueNotFoundException;

@@ -30,7 +30,11 @@ public class ReviewService
     @Transactional
     public void createReview(ReviewCreationRequest request)
     {
-        Review review = modelMapper.map(request, Review.class);
+        Review review = new Review();
+
+        review.setRating(request.getRating());
+        review.setComment(request.getComment());
+        review.setCreatedAt(LocalDateTime.now());
 
         Long userId = request.getUserId();
         User user = userRepository.findById(userId).orElseThrow(() -> new UserNotFoundException(userId));
@@ -39,8 +43,6 @@ public class ReviewService
         Long venueId = request.getVenueId();
         Venue venue = venueRepository.findById(venueId).orElseThrow(() -> new VenueNotFoundException(venueId));
         review.setVenue(venue);
-
-        review.setCreatedAt(LocalDateTime.now());
 
         reviewRepository.save(review);
     }
@@ -59,7 +61,7 @@ public class ReviewService
         List<Review> reviews = reviewRepository.findByUserId(userId);
 
         return reviews.stream()
-                .map(r -> modelMapper.map(r, ReviewDto.class))
+                .map(this::convertToDto)
                 .toList();
     }
 
@@ -71,7 +73,21 @@ public class ReviewService
         List<Review> reviews = reviewRepository.findByVenueId(venueId);
 
         return reviews.stream()
-                .map(r -> modelMapper.map(r, ReviewDto.class))
+                .map(this::convertToDto)
                 .toList();
+    }
+
+    private ReviewDto convertToDto(Review review)
+    {
+        ReviewDto reviewDto = new ReviewDto();
+
+        reviewDto.setId(review.getId());
+        reviewDto.setVenueId(review.getVenue().getId());
+        reviewDto.setUserId(review.getUser().getId());
+        reviewDto.setCreatedAt(review.getCreatedAt());
+        reviewDto.setRating(review.getRating());
+        reviewDto.setComment(review.getComment());
+
+        return reviewDto;
     }
 }

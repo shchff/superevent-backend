@@ -7,6 +7,6 @@ import java.util.List;
 
 public interface ReviewRepository extends JpaRepository<Review, Long>
 {
-    List<Review> findByVenueId(Long venueId);  // Получение отзывов для площадки
-    List<Review> findByUserId(Long userId);    // Получение всех отзывов пользователя
+    List<Review> findByVenueId(Long venueId);
+    List<Review> findByUserId(Long userId);
 }

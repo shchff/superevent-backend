@@ -39,16 +39,16 @@ public class ReviewController
 
     @GetMapping("/users/{id}")
     @Operation(summary = "Получение всех отзывов пользователя")
-    public List<ReviewDto> getAllUsersReviews(@PathVariable Long userId)
+    public List<ReviewDto> getAllUsersReviews(@PathVariable Long id)
     {
-        return reviewService.getAllUsersReviews(userId);
+        return reviewService.getAllUsersReviews(id);
     }
 
     @GetMapping("/venues/{id}")
     @Operation(summary = "Получение всех отзывов площадки")
-    public List<ReviewDto> getAllVenuesReviews(@PathVariable Long userId)
+    public List<ReviewDto> getAllVenuesReviews(@PathVariable Long id)
     {
-        return reviewService.getAllVenuesReviews(userId);
+        return reviewService.getAllVenuesReviews(id);
     }
 
     @ExceptionHandler
