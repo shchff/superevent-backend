@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.shchff.superevent_backend.dto.AverageRatingDto;
 import ru.shchff.superevent_backend.dto.ReviewCreationRequest;
 import ru.shchff.superevent_backend.dto.ReviewDto;
 import ru.shchff.superevent_backend.entities.Review;
@@ -89,5 +90,22 @@ public class ReviewService
         reviewDto.setComment(review.getComment());
 
         return reviewDto;
+    }
+
+    @Transactional(readOnly = true)
+    public AverageRatingDto getAvgVenueRating(Long id)
+    {
+        List<ReviewDto> reviews = getAllVenuesReviews(id);
+
+        int sum = 0;
+
+        for (ReviewDto review : reviews)
+        {
+            sum += review.getRating();
+        }
+
+        Double avgRating = !reviews.isEmpty() ? sum * 1.0 / reviews.size() : 0;
+
+        return new AverageRatingDto(id, avgRating);
     }
 }

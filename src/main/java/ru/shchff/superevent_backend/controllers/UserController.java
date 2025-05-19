@@ -44,6 +44,15 @@ public class UserController
         return userService.findOne(id);
     }
 
+    @Operation(summary = "Получение пользователя по email")
+    @ApiResponse(responseCode = "200", description = "Пользоавтель получен")
+    @ApiResponse(responseCode = "404", description = "Пользователь с данным email не найден")
+    @GetMapping("/email/{email}")
+    public User getByEmail(@PathVariable("email") String email)
+    {
+        return userService.findByEmail(email);
+    }
+
     @ExceptionHandler
     private ResponseEntity<ErrorResponse> handleException(UserNotFoundException e)
     {

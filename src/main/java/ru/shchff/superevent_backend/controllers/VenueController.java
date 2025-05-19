@@ -87,6 +87,13 @@ public class VenueController
         return venueService.getVenuesByOwner(ownerId);
     }
 
+    @Operation(summary = "Удаление площадки")
+    @DeleteMapping("/{id}")
+    public void deleteVenue(@PathVariable Long id)
+    {
+        venueService.deleteVenue(id);
+    }
+
     @ExceptionHandler
     public ResponseEntity<ErrorResponse> handleException(VenueNotFoundException e)
     {

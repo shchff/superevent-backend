@@ -6,4 +6,5 @@ import ru.shchff.superevent_backend.entities.ModerationRequest;
 public interface ModerationRequestRepository extends JpaRepository<ModerationRequest, Long>
 {
 
+    void deleteAllByVenueId(Long id);
 }

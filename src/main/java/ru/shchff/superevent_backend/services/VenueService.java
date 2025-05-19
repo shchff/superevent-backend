@@ -172,4 +172,11 @@ public class VenueService
                 .orElseThrow(() -> new VenueNotFoundException(venueId));
         return new ArrayList<>(venue.getTags());
     }
+
+    @Transactional
+    public void deleteVenue(Long id)
+    {
+        moderationRequestRepository.deleteAllByVenueId(id);
+        venueRepository.deleteById(id);
+    }
 }

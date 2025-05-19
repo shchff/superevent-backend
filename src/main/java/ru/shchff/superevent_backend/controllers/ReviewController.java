@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import ru.shchff.superevent_backend.dto.AverageRatingDto;
 import ru.shchff.superevent_backend.dto.ReviewCreationRequest;
 import ru.shchff.superevent_backend.dto.ReviewDto;
 import ru.shchff.superevent_backend.services.ReviewService;
@@ -49,6 +50,13 @@ public class ReviewController
     public List<ReviewDto> getAllVenuesReviews(@PathVariable Long id)
     {
         return reviewService.getAllVenuesReviews(id);
+    }
+
+    @GetMapping("/venues/avg-rating/{id}")
+    @Operation(summary = "Получение среднего рейтинга площадки")
+    public AverageRatingDto getAvgVenueRating(@PathVariable Long id)
+    {
+        return reviewService.getAvgVenueRating(id);
     }
 
     @ExceptionHandler

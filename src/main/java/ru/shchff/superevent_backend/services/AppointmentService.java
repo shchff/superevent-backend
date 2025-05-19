@@ -31,9 +31,9 @@ public class AppointmentService
     public List<AppointmentDto> getAppointmentsByVenueFromToday(Long venueId)
     {
         List<Appointment> appointments = appointmentRepository
-                .findByVenueIdAndDateAfterOrderByDateAsc(venueId, LocalDate.now().minusDays(1));
+                .findByVenueId(venueId);
         return appointments.stream()
-                .map(a -> modelMapper.map(a, AppointmentDto.class))
+                .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 

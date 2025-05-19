@@ -5,16 +5,23 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+import ru.shchff.superevent_backend.entities.User;
+import ru.shchff.superevent_backend.repositories.UserRepository;
+import ru.shchff.superevent_backend.util.UserNotFoundException;
+
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.Function;
 
 @Service
+@RequiredArgsConstructor
 public class JwtTokenUtil
 {
     @Value("${jwt.secret}")
@@ -23,6 +30,8 @@ public class JwtTokenUtil
     @Value("${jwt.expiration}")
     private long expiration;
 
+    private final UserRepository userRepository;
+
     public String generateToken(UserDetails userDetails)
     {
         Map<String, Object> claims = new HashMap<>();
@@ -30,6 +39,10 @@ public class JwtTokenUtil
                 .findFirst()
                 .map(Object::toString)
                 .orElse("GUEST")); // fallback на случай, если нет роли
+
+        User user = userRepository.findByEmail(userDetails.getUsername())
+                .orElseThrow(() -> new UserNotFoundException(userDetails.getUsername()));
+        claims.put("id", user.getId());
 
         return Jwts.builder()
                 .setClaims(claims)
