@@ -23,6 +23,15 @@ public class AppointmentController
 {
     private final AppointmentService appointmentService;
 
+    @GetMapping("/upcoming/user/{userId}")
+    @Operation(summary = "Получить записи на площадку с сегодняшней даты")
+    @ApiResponse(responseCode = "200", description = "Список записей получен")
+    public List<AppointmentDto> getUpcomingForUser(@PathVariable Long userId)
+    {
+        return appointmentService.findUpcomingForUser(userId);
+    }
+
+
     @Operation(summary = "Получить записи на площадку с сегодняшней даты")
     @ApiResponse(responseCode = "200", description = "Список записей получен")
     @GetMapping("/venue/{venueId}")

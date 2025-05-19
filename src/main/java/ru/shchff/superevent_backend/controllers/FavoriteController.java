@@ -39,7 +39,7 @@ public class FavoriteController
 
     @GetMapping("/users/{id}")
     @Operation(summary = "Получение избранных площадок пользователя")
-    public List<FavoriteDto> getAllUsersReviews(@PathVariable Long id)
+    public List<FavoriteDto> getAllUsersFavorite(@PathVariable Long id)
     {
         return favoriteService.getAllUsersFavorites(id);
     }

@@ -14,6 +14,8 @@ import ru.shchff.superevent_backend.services.UserService;
 import ru.shchff.superevent_backend.util.ErrorResponse;
 import ru.shchff.superevent_backend.util.UserNotFoundException;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 @RequiredArgsConstructor
@@ -42,6 +44,14 @@ public class UserController
             @Parameter(description = "Id пользователя", example = "1") @PathVariable("id") long id)
     {
         return userService.findOne(id);
+    }
+
+    @Operation(summary = "Получение всех пользователей")
+    @ApiResponse(responseCode = "200", description = "Пользоавтели получены")
+    @GetMapping()
+    public List<User> getUsers()
+    {
+        return userService.getAllUsers();
     }
 
     @Operation(summary = "Получение пользователя по email")

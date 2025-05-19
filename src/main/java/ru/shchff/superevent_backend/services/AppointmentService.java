@@ -1,7 +1,6 @@
 package ru.shchff.superevent_backend.services;
 
 import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.shchff.superevent_backend.dto.AppointmentDto;
@@ -15,6 +14,7 @@ import ru.shchff.superevent_backend.util.UserNotFoundException;
 import ru.shchff.superevent_backend.util.VenueNotFoundException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +25,6 @@ public class AppointmentService
     private final AppointmentRepository appointmentRepository;
     private final UserRepository userRepository;
     private final VenueRepository venueRepository;
-    private final ModelMapper modelMapper;
 
     @Transactional(readOnly = true)
     public List<AppointmentDto> getAppointmentsByVenueFromToday(Long venueId)
@@ -74,5 +73,15 @@ public class AppointmentService
         appointmentDto.setVenueId(appointment.getVenue().getId());
 
         return appointmentDto;
+    }
+
+    @Transactional(readOnly = true)
+    public List<AppointmentDto> findUpcomingForUser(Long userId)
+    {
+        List<Appointment> appointments = appointmentRepository
+                .findByClientIdAndDateAfter(userId, LocalDate.now());
+        return appointments.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
     }
 }
